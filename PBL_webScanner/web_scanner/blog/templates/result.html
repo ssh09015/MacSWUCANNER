@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결과 페이지</title>
+    <link rel="stylesheet" href="{% static 'css/result_style.css' %}">
+
+
+    
+    <script>
+        // 페이지 로딩 시작 시간 기록
+        var startTime = new Date().getTime();
+
+        // 페이지 로딩 완료 시간 기록 및 출력
+        window.addEventListener('load', function() {
+            var endTime = new Date().getTime();
+            var loadTime = (endTime - startTime) / 1000; // 초 단위로 변환
+
+            // 결과 페이지의 특정 div에 로딩 시간 출력
+            document.getElementById('load-time').innerText = '페이지 로딩 시간: ' + loadTime.toFixed(2) + '초';
+        });
+    </script>
+</head>
+<body>
+
+    <!-- <h1>결과페이지</h1>
+    <p>URL: {{ url }}</p>
+    <p>선택한 옵션들: {{ options|join:", " }}</p>
+    <p>처리된 결과 데이터: {% include 'report.html' %}</p> -->
+
+    <form method="post" action="{% url 'send_result' %}" onsubmit="return prepareData()">
+        {% csrf_token %}
+        <label for="email">이메일 입력</label>
+        <input type="email" name="email" id="email" class="email-input" required placeholder="이메일을 입력해주세요." value="{{ email|default:'' }}">
+        <button type="submit">결과 보고서 이메일로 보내기</button>
+    </form>
+    
+    <div class="center-button">
+        <a href="{% url 'download_result' %}">
+            <button>결과 보고서 다운로드</button>
+        </a>
+    </div>
+
+
+    <script>
+        function validateForm() {
+            var emailInput = document.getElementById('email').value;
+            if (!isValidEmail(emailInput)) {
+                alert("유효한 이메일 주소를 입력해주세요.");
+                return false;
+            }
+            return true;
+        }
+
+        function isValidEmail(email) {
+            // 이메일 유효성을 검사
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+    </script>
+
+</body>
+</html>
